@@ -74,17 +74,12 @@ def distance(user_address_1, user_address_2):
     return d
 
 
-def main():
-    address_1 = input('Enter the first address (must be a one line address): ')
-    address_2 = input('Enter the second address (must be a one line address): ')
+def main(address_1, address_2):
 
     user_address_1 = read_address(address_1)
     user_address_2 = read_address(address_2)
 
-    the_distance = round(distance(user_address_1, user_address_2))
+    the_distance = distance(user_address_1, user_address_2)
 
-    print(f"The distance between the two addresses is about {the_distance} miles")
+    return round(the_distance, 2)
 
-    
-if __name__ == "__main__":
-    main()
