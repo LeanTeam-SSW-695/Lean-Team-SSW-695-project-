@@ -73,6 +73,27 @@ def distance(user_address_1, user_address_2):
 
     return d
 
+def the_weather(user_weather_1, user_weather_2):
+    """ a function to retrieve the current temperature of both addresses using the OpenWeatherMap API"""
+
+    x1, y1 = user_weather_1['y'], user_weather_1['x']
+    x2, y2 = user_weather_2['y'], user_weather_2['x']
+
+    api_key = "7a160b5068bd8bad7f789b5e9b450a69"
+    url_1 = "https://api.openweathermap.org/data/2.5/onecall?lat=%s&lon=%s&appid=%s&units=metric" % (x1, y1, api_key)
+    url_2 = "https://api.openweathermap.org/data/2.5/onecall?lat=%s&lon=%s&appid=%s&units=metric" % (x2, y2, api_key)
+
+    response_1 = requests.get(url_1)
+    response_2 = requests.get(url_2)
+
+    data_1 = json.loads(response_1.text)
+    data_2 = json.loads(response_2.text)
+
+    current_temp_1 = data_1["current"]["temp"]
+    current_temp_2 = data_2["current"]["temp"]
+
+    return current_temp_1, current_temp_2
+
 
 def main(address_1, address_2):
 
@@ -81,5 +102,9 @@ def main(address_1, address_2):
 
     the_distance = distance(user_address_1, user_address_2)
 
+    user_weather_1 = user_address_1
+    user_weather_2 = user_address_2
+    weather_1, weather_2 = the_weather(user_weather_1, user_weather_2)
+    
     return round(the_distance, 2)
 
