@@ -6,6 +6,7 @@
 """
 
 import tkinter
+import tkinter.messagebox
 import pickle
 import webbrowser
 import main
