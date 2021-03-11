@@ -18,39 +18,24 @@ def read_address(address):
         of that address
     """
 
+    global js
     geocoding_api = 'https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?'
     parms = dict()
     parms['address'], parms['benchmark'], parms['format'] = address, 'Public_AR_Current', 'json'
 
-    try:
-        url = geocoding_api + urllib.parse.urlencode(parms)
+    url = geocoding_api + urllib.parse.urlencode(parms)
 
-    except ValueError:
-        print(f"The website you entered ({address}) has to start with http://")  # if the user entered a wrong website
-    except urllib.error.HTTPError:
-        print(f"HTTP Error 404: {address} Not Found")
-    else:
-        print('Retrieving', url)
-        uh = urllib.request.urlopen(url)
-        data = uh.read().decode()
+    uh = urllib.request.urlopen(url)
+    data = uh.read().decode()
 
-        try:
-            js = json.loads(data)
-        except:
-            print('==== Failure To Retrieve ====')
-            print(data)
-            exit()
+    js = json.loads(data)
 
-        coordinates = dict()
+    coordinates = dict()
 
-        try:
-            coordinates['x'] = js['result']['addressMatches'][0]['coordinates']['x']
-            coordinates['y'] = js['result']['addressMatches'][0]['coordinates']['y']
+    coordinates['x'] = js['result']['addressMatches'][0]['coordinates']['x']
+    coordinates['y'] = js['result']['addressMatches'][0]['coordinates']['y']
 
-        except IndexError as i:
-            print(i, '\nplease, make sure that you enter your one-line address correctly')
-
-        return coordinates
+    return coordinates
 
 
 def distance(user_address_1, user_address_2):
