@@ -4,5 +4,6 @@ python:
 before_install:
   - pip install urllib
   - pip install json
+  - pip install requests
 script:
   - python -m unittest main_unittest.py
