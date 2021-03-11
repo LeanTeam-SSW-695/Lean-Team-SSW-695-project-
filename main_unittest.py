@@ -1,11 +1,5 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[3]:
-
-
 """
-    authors: 
+    authors:
     Abdulellah Shahrani, Chengyi Zhang, Haoran Li, and Sachin Paramesha
     the code:
     The unittest for main.py
@@ -30,10 +24,3 @@ class TestAPP(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main(argv=['first-arg-is-ignored'], exit=False)
-
-
-# In[ ]:
-
-
-
-
