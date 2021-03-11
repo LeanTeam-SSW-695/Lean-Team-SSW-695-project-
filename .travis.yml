@@ -5,4 +5,5 @@ python:
 before_install:
   - python --version
   - pip install -U pip
-script: python -m unittest main_unittest.py
+script:
+  - python -m unittest main_unittest.py
