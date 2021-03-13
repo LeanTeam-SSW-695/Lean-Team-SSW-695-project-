@@ -43,8 +43,9 @@ def calc():
     originAddress = origin_address.get()
     destinationAddress = destination_address.get()
     try:
-        answer = main.main(originAddress, destinationAddress)
-        output = "Distance between origin and destination is about {} miles.".format(answer)
+        answer, originWeather, destinationWeather = main.main(originAddress, destinationAddress)
+        output = "Distance between origin and destination is about {} miles.\nThe temperature at destination" \
+                 " address is {}°C, and at origin is {}°C".format(answer, originWeather, destinationWeather)
         tkinter.Label(screen, text=output).place(x=50, y=500)
     except (ValueError, IndexError, urllib.error.URLError):
         tkinter.messagebox.showerror(title='Error!',

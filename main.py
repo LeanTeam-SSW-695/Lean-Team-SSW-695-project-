@@ -91,5 +91,5 @@ def main(address_1, address_2):
     user_weather_2 = user_address_2
     weather_1, weather_2 = the_weather(user_weather_1, user_weather_2)
     
-    return round(the_distance, 2)
+    return round(the_distance, 2), weather_1, weather_2
 
