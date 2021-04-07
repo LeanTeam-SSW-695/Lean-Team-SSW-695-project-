@@ -20,7 +20,7 @@ class TestAPP(unittest.TestCase):
         #test distance to see whether it can get the right distance between two coordinates
         x_coordinates = {'lat': 42.338842, 'lng': -71.15455279999999}
         y_coordinates = {'lat': 40.748558, 'lng': -73.9857578}
-        self.assertEqual(main.distance(x_coordinates, y_coordinates), ('208 mi', '3 hours 32 mins'))
+        self.assertEqual(main.distance(x_coordinates, y_coordinates), ('206 mi', '3 hours 30 mins'))
 
 if __name__ == '__main__':
     unittest.main(argv=['first-arg-is-ignored'], exit=False)
