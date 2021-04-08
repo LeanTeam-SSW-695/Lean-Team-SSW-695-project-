@@ -5,6 +5,7 @@ python:
 install:
   - pip install requests
   - pip install selenium
+  - pip install amadeus
 script:
   - python3 -m unittest main_unittest.py
   - python3 -m unittest restaurant_test.py
