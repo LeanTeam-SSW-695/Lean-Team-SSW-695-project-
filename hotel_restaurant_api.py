@@ -2,7 +2,7 @@ import json
 import requests
 from amadeus import Client, ResponseError
 
-def find_resturant(location, term = "food", rating = 4.0, page = 1):
+def find_restaurant(location, term = "food", rating = 4.0, page = 1):
     """
     The function search term around location and show reviews
     Location: The location
@@ -46,8 +46,8 @@ def find_resturant(location, term = "food", rating = 4.0, page = 1):
                 list.append(bdic)
     return list
 
-def print_resturant(location, term = "food", rating = 4.0, page = 1):
-    print(json.dumps(find_resturant(location, term = "food", rating = 4.0, page = 1), indent=4))
+def print_restaurant(location, term = "food", rating = 4.0, page = 1):
+    print(json.dumps(find_restaurant(location, term = "food", rating = 4.0, page = 1), indent=4))
 
 def find_hotel(city, page = 1):
     """
