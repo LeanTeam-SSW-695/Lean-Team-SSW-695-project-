@@ -2,10 +2,10 @@
     authors:
     Abdulellah Shahrani, Chengyi Zhang, Haoran Li, and Sachin Paramesha
     the code:
-    The unittest for main.py
+    The unittest for GoogleMapAPI.py
 """
 import unittest
-import hotel_restaurant_api
+import hotel_restaurant_API
 
 class TestAPP(unittest.TestCase):
 
@@ -45,7 +45,7 @@ class TestAPP(unittest.TestCase):
   'Review': {'User': 'Victoria N.',
    'Rating': 5,
    'Text': 'This spot is offering really cute takeout boxes! I love the way they maintain high quality food as well as aesthetic especially right now. \n\nWe had the...'}}]
-        self.assertEqual(hotel_restaurant_api.find_restaurant("jersey city"), result)
+        self.assertEqual(hotel_restaurant_API.find_restaurant("jersey city"), result)
 
 if __name__ == '__main__':
     unittest.main(argv=['first-arg-is-ignored'], exit=False)
