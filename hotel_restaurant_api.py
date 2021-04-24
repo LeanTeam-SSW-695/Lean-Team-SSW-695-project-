@@ -55,34 +55,26 @@ def find_hotel(city, page = 1):
     City: The city
     Page: The page displayed, each page have 5 result, default is 1
     """
-    amadeus = Client(
-        client_id='zfkFUCVDPnvzLZbeQ9POHk0xwgKDEtgl',      #api_key
-        client_secret='SiN9lW5mXrzDLP83'                   #api_secret
-    )
+    api_key = 'AIzaSyBGMcgUxRVurcyByfLrnRlOyI_cKdvMkiE'
+    url = "https://maps.googleapis.com/maps/api/place/textsearch/json?"
 
-    hotels_by_city = amadeus.shopping.hotel_offers.get(cityCode = city)
-    hlist = []
+    r = requests.get(url + 'query=hotel in ' + query + '&key=' + api_key)
+    result = r.json()
+    hotels = result['results']
+
     count = 0
-    for item in hotels_by_city.data:
+    hlist = []
+
+    for hotel in hotels:
         hdic = {}
-        if count // 5 + 1 == page:                            #each page has five hotels
-            print(item["hotel"]["name"])
-            hdic["Name"] = item["hotel"]["name"]
-            hdic["Address"] = item["hotel"]["address"]["lines"][0] + ", " + item["hotel"]["address"]["cityName"] +             ", " + item["hotel"]["address"]["stateCode"] + ", " + item["hotel"]["address"]["postalCode"]
-            hdic["Contact"] = item["hotel"]["contact"]["phone"]
-            hdic["Offers"] = []
-            for room in item["offers"]:
-                rdic = {}
-                try:
-                    rdic["Type"] = str(room["room"]["typeEstimated"]["beds"]) + " " +                     room["room"]["typeEstimated"]["bedType"] + " BED"
-                except KeyError:
-                    rdic["Type"] = str(room["room"]["typeEstimated"])
-                rdic["Price"] = room["price"]["total"]
-                hdic["Offers"].append(rdic)
+        if count // 5 + 1 == page:
+            hdic["Name"] = hotel["name"]
+            hdic["Address"] = hotel["formatted_address"]
+            hdic["Open"] = hotel["opening_hours"]["open_now"]
+            hdic["Rating"] = hotel["rating"]
             hlist.append(hdic)
         elif count // 5 + 1 > page:
             break
-        print(count)
         count += 1
 
     return hlist
