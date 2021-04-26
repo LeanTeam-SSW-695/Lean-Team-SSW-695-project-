@@ -1,5 +1,6 @@
 
 #:import FloatLayout kivy.uix.floatlayout.FloatLayout
+#:import BoxLayout kivy.uix.boxlayout.BoxLayout
 
 <ScreenManagement>:
     ScreenLoading:
@@ -18,16 +19,23 @@
 
 
 <ScreenOne>:
-    FloatLayout:
+    orientation: 'vertical'
+    Label:
+        text: 'Welcome to Use Travel Companion!'
+    BoxLayout:
+
         Image:
             source: 'Image.jpg'
-            pos_
+        Button:
+            text: 'Next'
+            on_release: root.go_forward()
 
 
 
 <ScreenTwo>:
+    BoxLayout:
 
 
 <ScreenPlans>:
-
+    BoxLayout:
 

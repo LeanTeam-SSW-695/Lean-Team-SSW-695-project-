@@ -6,7 +6,7 @@ from kivy.uix.button import Button
 from kivy.uix.textinput import TextInput
 from kivy.uix.image import Image
 from kivy.uix.floatlayout import FloatLayout
-from kivy.uix.screenmanager import ScreenManager, Screen, SlideTransition
+from kivy.uix.screenmanager import ScreenManager, Screen#, SlideTransition
 from kivy.lang import Builder
 from kivy.clock import Clock
 
@@ -16,12 +16,13 @@ class ScreenLoading(Screen):
         Clock.schedule_once(self.go_to_main, 3)
 
     def go_to_main(self, dt):
-        self.manager.transition = SlideTransition(direction='left')
+        # self.manager.transition = SlideTransition(direction='left')
         self.manager.current = 'Start'
 
 
 class ScreenOne(Screen):
-    pass
+    def go_forward(self):
+        self.manager.current = 'Implement'
 
 
 class ScreenTwo(Screen):
