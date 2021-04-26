@@ -1,6 +1,9 @@
 import json
 import requests
 import main
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.support.ui import WebDriverWait
 
 def find_restaurant(address, term = "food", rating = 4.0, miles = 5, number = 5):
     """
