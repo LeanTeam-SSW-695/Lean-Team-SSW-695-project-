@@ -12,6 +12,7 @@ from tkinter import BOTTOM
 from PIL import ImageTk, Image
 import urllib.error
 import main
+import hotel_restaurant_api
 
 screen = tkinter.Tk()
 screen.title("Travel Companion")
@@ -94,6 +95,23 @@ def show_map():
         tkinter.messagebox.showerror(title='Error!',
                                      message='Connection Error!')
 
+def get_info():
+    address = origin_address.get()
+    try:
+        hlist = hotel_restaurant_api.find_hotel(address)
+        rlist = hotel_restaurant_api.find_restaurant(address)
+        hotels = "Hotel is {}".format([hotel["Name"] for hotel in hlist])
+        tkinter.Label(screen, text = hotels).place(x=100, y=490)
+        restaurants = "Restaurant is {}".format([res["Name"] for res in rlist])
+        tkinter.Label(screen, text = restaurants).place(x=100, y=590)
+    except (ValueError, IndexError, urllib.error.URLError):
+        tkinter.messagebox.showerror(title='Error!',
+                                     message='Please make sure you enter your address correctly.')
+    except urllib.error.HTTPError:
+        tkinter.messagebox.showerror(title='Error!',
+                                     message='Connection Error!')
+
+    return hlist, rlist
 
 btn_reset = tkinter.Button(screen, text='Reset', command=reset)
 btn_reset.place(x=300, y=370)
@@ -105,5 +123,7 @@ btn_calc = tkinter.Button(screen, text='Calculate', command=calc)
 btn_calc.place(x=400, y=370)
 btn_show_map = tkinter.Button(screen, text='Show Directions on Google Maps', command=show_map)
 btn_show_map.place(x=500, y=370)
+btn_findInfo = tkinter.Button(screen, text='Find Hotels and Restaurants', command=get_info)
+btn_findInfo.place(x=400, y=420)
 
 screen.mainloop()
