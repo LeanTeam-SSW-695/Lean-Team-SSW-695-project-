@@ -1,6 +1,6 @@
 import json
 import requests
-import main
+import GoogleMapAPI
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
@@ -22,13 +22,13 @@ def find_restaurant(address, term = "food", rating = 4.0, miles = 5, number = 5)
     parsed = json.loads(req.text)
     businesses = parsed["businesses"]
 
-    user_address = main.read_address(address)
+    user_address = GoogleMapAPI.read_address(address)
     list = []
     count = 0
     for business in businesses:
         bdic = {}
-        res_address = main.read_address(" ".join(business["location"]["display_address"]))
-        dis = main.distance(user_address, res_address)
+        res_address = GoogleMapAPI.read_address(" ".join(business["location"]["display_address"]))
+        dis = GoogleMapAPI.distance(user_address, res_address)
         if rating <= float(business["rating"]):
             if float(dis[0].split(" ")[0]) < miles:
                 bdic["Name"] = business["name"]
@@ -73,14 +73,14 @@ def find_hotel(address, miles = 5, number = 5):
     result = r.json()
     hotels = result['results']
 
-    user_address = main.read_address(address)
+    user_address = GoogleMapAPI.read_address(address)
     hlist = []
     count = 0
 
     for hotel in hotels:
         hdic = {}
-        hotel_address = main.read_address(hotel["formatted_address"])
-        dis = main.distance(user_address, hotel_address)
+        hotel_address = GoogleMapAPI.read_address(hotel["formatted_address"])
+        dis = GoogleMapAPI.distance(user_address, hotel_address)
         if float(dis[0].split(" ")[0]) < miles:
             hdic["Name"] = hotel["name"]
             hdic["Address"] = hotel["formatted_address"]

@@ -11,7 +11,7 @@ from tkinter import BOTTOM
 
 from PIL import ImageTk, Image
 import urllib.error
-import main
+import GoogleMapAPI
 import hotel_restaurant_API
 
 screen = tkinter.Tk()
@@ -40,14 +40,14 @@ def reset():
 
 
 def getLocOrigin():
-    coordinates = main.get_location()
+    coordinates = GoogleMapAPI.get_location()
     entry_origin.insert(0, coordinates['neighborhood'])
     origin_coordinates = coordinates['lat'] + coordinates['lng']
     return origin_coordinates
 
 
 def getLocDestina():
-    coordinates = main.get_location()
+    coordinates = GoogleMapAPI.get_location()
     entry_destination.insert(0, coordinates['neighborhood'])
     destination_coordinates = coordinates['lat'] + coordinates['lng']
     return destination_coordinates
@@ -57,7 +57,7 @@ def calc():
     originAddress = origin_address.get()
     destinationAddress = destination_address.get()
     try:
-        theDistance, theDuration, originWeather, destinationWeather = main.main(originAddress, destinationAddress)
+        theDistance, theDuration, originWeather, destinationWeather = GoogleMapAPI.GoogleMapAPI(originAddress, destinationAddress)
         output = "Distance between origin and destination is about {}\n and the duration of the drive is {}." \
                  "\n\nThe temperature at destination" \
                  " address is {}°F,\n and at origin is {}°F".format(theDistance, theDuration, originWeather,
@@ -72,10 +72,10 @@ def calc():
 
 
 def show_map():
-    originAddress = main.read_address(origin_address.get())
-    destinationAddress = main.read_address(destination_address.get())
+    originAddress = GoogleMapAPI.read_address(origin_address.get())
+    destinationAddress = GoogleMapAPI.read_address(destination_address.get())
     try:
-        main.get_map(originAddress, destinationAddress)
+        GoogleMapAPI.get_map(originAddress, destinationAddress)
         #w = tkinter.Frame(screen, height=500, width=500).place(x=600, y=600)
         #w.pack(side=BOTTOM)
         # loading the image
@@ -98,8 +98,8 @@ def show_map():
 def get_info():
     address = origin_address.get()
     try:
-        hlist = hotel_restaurant_api.find_hotel(address)
-        rlist = hotel_restaurant_api.find_restaurant(address)
+        hlist = hotel_restaurant_API.find_hotel(address)
+        rlist = hotel_restaurant_API.find_restaurant(address)
         hotels = "Hotel is {}".format([hotel["Name"] for hotel in hlist])
         tkinter.Label(screen, text = hotels).place(x=100, y=490)
         restaurants = "Restaurant is {}".format([res["Name"] for res in rlist])
@@ -126,4 +126,4 @@ btn_show_map.place(x=500, y=370)
 btn_findInfo = tkinter.Button(screen, text='Find Hotels and Restaurants', command=get_info)
 btn_findInfo.place(x=400, y=420)
 
-screen.mainloop()
+screen.GoogleMapAPIloop()
