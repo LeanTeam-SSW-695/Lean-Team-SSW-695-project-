@@ -1,14 +1,11 @@
 import json
 import requests
-import GoogleMapAPI
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.support.ui import WebDriverWait
+from amadeus import Client, ResponseError
 
-def find_restaurant(address, term = "food", rating = 4.0, miles = 5, number = 5):
+def find_restaurant(location, term = "food", rating = 4.0, page = 1):
     """
     The function search term around location and show reviews
-    address: The address
+    Location: The location
     Term: The food type you want to search, default is food
     Rating: Display the result above the rating, default is 4
     Page: The page displayed, each page have 5 result, default is 1
@@ -16,85 +13,79 @@ def find_restaurant(address, term = "food", rating = 4.0, miles = 5, number = 5)
     api_key = "zmG2CEc6FuS1WgkRP7kX1mUwv78J6uQQ-MiazaqvxMoqdbGrdzDBhtUndsI7WTOorz2aUcOs-NOTeEa7120RkNZ3qy6M0xRsQr3nHpraT6m5SvK2H0P8NlK3WS1bYHYx"
     headers = {'Authorization': 'Bearer %s' % api_key}
     url = 'https://api.yelp.com/v3/businesses/search'
-    params = {'term': term, 'location': address}
+    params = {'term': term, 'location': location}
 
     req = requests.get(url, params = params, headers = headers)
     parsed = json.loads(req.text)
     businesses = parsed["businesses"]
 
-    user_address = GoogleMapAPI.read_address(address)
     list = []
     count = 0
     for business in businesses:
         bdic = {}
-        res_address = GoogleMapAPI.read_address(" ".join(business["location"]["display_address"]))
-        dis = GoogleMapAPI.distance(user_address, res_address)
         if rating <= float(business["rating"]):
-            if float(dis[0].split(" ")[0]) < miles:
+            if count // 5 + 1 == page:
                 bdic["Name"] = business["name"]
                 bdic["Rating"] = business["rating"]
                 bdic["Address"] = " ".join(business["location"]["display_address"])
                 bdic["Phone"] = business["phone"]
                 count += 1
 
-#                 id = business["id"]
-#                 url="https://api.yelp.com/v3/businesses/" + id + "/reviews"
-#                 req = requests.get(url, headers = headers)
-#                 parsed = json.loads(req.text)
-#                 reviews = parsed["reviews"]
+                id = business["id"]
+                url="https://api.yelp.com/v3/businesses/" + id + "/reviews"
+                req = requests.get(url, headers = headers)
+                parsed = json.loads(req.text)
+                reviews = parsed["reviews"]
 
-#                 bdic["Review"] = {}
-#                 for review in reviews:
-#                     bdic["Review"]["User"] = review["user"]["name"]
-#                     bdic["Review"]["Rating"] = review["rating"]
-#                     bdic["Review"]["Text"] = review["text"]
-#                     break
+                bdic["Review"] = {}
+                for review in reviews:
+                    bdic["Review"]["User"] = review["user"]["name"]
+                    bdic["Review"]["Rating"] = review["rating"]
+                    bdic["Review"]["Text"] = review["text"]
 
                 list.append(bdic)
-
-            if count >= number:
-                break
     return list
 
-def print_restaurant(address, term = "food", rating = 4.0, miles = 5, number = 5):
-    print(json.dumps(find_restaurant(address, term, rating, miles, number), indent=4))
+def print_restaurant(location, term = "food", rating = 4.0, page = 1):
+    print(json.dumps(find_restaurant(location, term = "food", rating = 4.0, page = 1), indent=4))
 
-def find_hotel(address, miles = 5, number = 5):
+def find_hotel(city, page = 1):
     """
     Find hotels by city
-    City: The address
+    City: The city
     Page: The page displayed, each page have 5 result, default is 1
     """
-    api_key = 'AIzaSyBGMcgUxRVurcyByfLrnRlOyI_cKdvMkiE'
-    url = "https://maps.googleapis.com/maps/api/place/textsearch/json?"
+    amadeus = Client(
+        client_id='zfkFUCVDPnvzLZbeQ9POHk0xwgKDEtgl',      #api_key
+        client_secret='SiN9lW5mXrzDLP83'                   #api_secret
+    )
 
-    r = requests.get(url + 'query=hotel in ' + address +
-                        '&key=' + api_key)
-    result = r.json()
-    hotels = result['results']
-
-    user_address = GoogleMapAPI.read_address(address)
+    hotels_by_city = amadeus.shopping.hotel_offers.get(cityCode = city)
     hlist = []
     count = 0
-
-    for hotel in hotels:
+    for item in hotels_by_city.data:
         hdic = {}
-        hotel_address = GoogleMapAPI.read_address(hotel["formatted_address"])
-        dis = GoogleMapAPI.distance(user_address, hotel_address)
-        if float(dis[0].split(" ")[0]) < miles:
-            hdic["Name"] = hotel["name"]
-            hdic["Address"] = hotel["formatted_address"]
-            try:
-                hdic["Open"] = hotel["opening_hours"]["open_now"]
-            except KeyError:
-                hdic["Open"] = "Unknown"
-            hdic["Rating"] = hotel["rating"]
+        if count // 5 + 1 == page:                            #each page has five hotels
+            print(item["hotel"]["name"])
+            hdic["Name"] = item["hotel"]["name"]
+            hdic["Address"] = item["hotel"]["address"]["lines"][0] + ", " + item["hotel"]["address"]["cityName"] +             ", " + item["hotel"]["address"]["stateCode"] + ", " + item["hotel"]["address"]["postalCode"]
+            hdic["Contact"] = item["hotel"]["contact"]["phone"]
+            hdic["Offers"] = []
+            for room in item["offers"]:
+                rdic = {}
+                try:
+                    rdic["Type"] = str(room["room"]["typeEstimated"]["beds"]) + " " +                     room["room"]["typeEstimated"]["bedType"] + " BED"
+                except KeyError:
+                    rdic["Type"] = str(room["room"]["typeEstimated"])
+                rdic["Price"] = room["price"]["total"]
+                hdic["Offers"].append(rdic)
             hlist.append(hdic)
-            count += 1
-        if count > number:
+        elif count // 5 + 1 > page:
             break
+        print(count)
+        count += 1
 
     return hlist
 
-def print_hotel(address, miles = 5, number = 5):
-    print(json.dumps(find_hotel(address, miles, number), indent=4))
+def print_hotel(city, page = 1):
+    print(json.dumps(find_hotel(city, page), indent=4))
