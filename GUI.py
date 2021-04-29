@@ -57,7 +57,7 @@ def calc():
     originAddress = origin_address.get()
     destinationAddress = destination_address.get()
     try:
-        theDistance, theDuration, originWeather, destinationWeather = GoogleMapAPI.GoogleMapAPI(originAddress, destinationAddress)
+        theDistance, theDuration, originWeather, destinationWeather = GoogleMapAPI.main(originAddress, destinationAddress)
         output = "Distance between origin and destination is about {}\n and the duration of the drive is {}." \
                  "\n\nThe temperature at destination" \
                  " address is {}°F,\n and at origin is {}°F".format(theDistance, theDuration, originWeather,
@@ -126,4 +126,4 @@ btn_show_map.place(x=500, y=370)
 btn_findInfo = tkinter.Button(screen, text='Find Hotels and Restaurants', command=get_info)
 btn_findInfo.place(x=400, y=420)
 
-screen.GoogleMapAPIloop()
+screen.mainloop()
