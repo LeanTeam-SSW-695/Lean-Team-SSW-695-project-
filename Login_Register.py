@@ -1,7 +1,7 @@
 import mysql.connector
 from mysql.connector.constants import ClientFlag
 
-def set_connection:
+def set_connection():
     config = {
         'user': 'root',
         'host': '35.220.246.119',
@@ -10,7 +10,7 @@ def set_connection:
     }
     cnxn = mysql.connector.connect(**config)
     cursor = cnxn.cursor()  # initialize connection cursor
-def create_table:
+def create_table():
     set_connection()
     try:
         cursor.execute('CREATE DATABASE login')  # create a new 'testdb' database
