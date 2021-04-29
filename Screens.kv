@@ -71,6 +71,16 @@
             text: ''
             size_hint_y: .3
 
+
+<LoginPop@Popup>:
+    auto_dismiss: False
+    Label:
+        text: 'Login Success!'
+    Button:
+        text: 'OK'
+        on_release: root.dismiss()
+
+
 <ScreenRegister>:
     BoxLayout:
         orientation: 'vertical'
@@ -107,7 +117,7 @@
             orientation: 'horizontal'
             size_hint_y: .1
             Button:
-                text: 'Check for Availability'
+                text: 'Check for Username Availability'
                 on_release: root.check_availability()
             Button:
                 text: 'Register'
@@ -117,14 +127,28 @@
             size_hint_y: .4
 
 
+<RegFailPop@Popup>:
+    auto_dismiss: False
+    Label:
+        text: 'Register Failed!'
+    Button:
+        text: 'OK'
+        on_release: root.dismiss()
 
+<RegSuccessPop@Popup>:
+    auto_dismiss: False
+    Label:
+        text: 'Register Succeeded!'
+    Button:
+        text: 'OK'
+        on_release: root.dismiss()
 
 
 <ScreenOne>:
     BoxLayout:
         orientation: 'vertical'
         Label:
-            text: root.getUsername()
+            text: app.greetings_username()
             size_hint_y: .1
             halign: 'right'
         Label:
@@ -179,16 +203,60 @@
             on_release: root.go_forward()
 
 
-
 <ScreenTwo>:
     BoxLayout:
+        orientation: 'vertical'
+        Label:
+            text: app.greetings_username()
+            size_hint_y: .1
+            halign: 'right'
+        Label:
+            text: 'Please Implement Your Trip Details'
+            font_size: 26
+        Label:
+            text: 'According to latest US Hour-of-Service Regulations'
+        Label:
+            text: '(Reference: "Commercial Motor Vehicle Driver Fatigue, '
+        Label:
+            text: 'Long-Term Health, and Highway Safety: Research Needs" (2016) ), '
+        Label:
+            text: 'we recommend you - as a driver for self-driving - to sleep for'
+        Label:
+            text: '8 hours at night, and rest another 2 hours on day, for your safe drive.'
+        BoxLayout:
+            orientation: 'horizontal'
+            Label:
+                text: 'What time do you plan to start your trip? (HH:MM in 24-hour-format)'
+            TextInput:
+                id: start_time
+        BoxLayout:
+            orientation: 'horizontal'
+            Label:
+                text: 'What time do you plan to start having lunch and resting at noon? (HH:MM in 24-hour-format)'
+            TextInput:
+                id: lunch-time
+        BoxLayout:
+            orientation: 'horizontal'
+            Label:
+                text: 'What time do you plan to start resting from night to morning? (HH:MM in 24-hour-format)'
+            TextInput:
+                id: sleep-time
         Button:
-            text: 'Recommended Plans'
-            on_release: root.recommend()
+            text: 'Recommended Hotels =>'
+            on_release: root.recommended_hotels()
+        Button:
+            text: 'Check for Nearby Restaurants =>'
+            on_release: root.nearby_restaurants()
 
-
-<ScreenPlans>:
+<ScreenHotels>:
     BoxLayout:
+        orientation: 'vertical'
+        Label:
+            text: app.greetings_username()
+            size_hint_y: .1
+            halign: 'right'
 
 
-
+<ScreenRestaurants>:
+    BoxLayout:
+        orientation: 'vertical'
