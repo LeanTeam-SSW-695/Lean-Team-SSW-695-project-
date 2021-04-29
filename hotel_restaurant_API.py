@@ -35,6 +35,7 @@ def find_restaurant(address, term = "food", rating = 4.0, miles = 5, number = 5)
                 bdic["Rating"] = business["rating"]
                 bdic["Address"] = " ".join(business["location"]["display_address"])
                 bdic["Phone"] = business["phone"]
+                bdic["Distance"] = dis[0].split(" ")[0]
                 count += 1
 
 #                 id = business["id"]
@@ -98,3 +99,32 @@ def find_hotel(address, miles = 5, number = 5):
 
 def print_hotel(address, miles = 5, number = 5):
     print(json.dumps(find_hotel(address, miles, number), indent=4))
+
+
+def time(duration):
+    t = int(duration.split(" ")[0]) * 60 + int(duration.split(" ")[2])
+    return t
+
+
+def estimate(origin, dest, Time):
+    t = time(Time)
+    origin_place = GoogleMapAPI.read_address(origin)
+    dest_place = GoogleMapAPI.read_address(dest)
+    total_time = GoogleMapAPI.distance(origin_place, dest_place)[1]
+    t_difference = t / time(total_time)
+    final_place = []
+    final_place.append(origin_place["lat"] + (dest_place["lat"] - origin_place["lat"]) * t_difference)
+    final_place.append(origin_place["lng"] + (dest_place["lng"] - origin_place["lng"]) * t_difference)
+    return final_place
+
+
+def find_place(origin, dest, time):
+    api_key = 'AIzaSyBGMcgUxRVurcyByfLrnRlOyI_cKdvMkiE'
+    url = "https://maps.googleapis.com/maps/api/geocode/json?"
+
+    latlng = estimate(origin, dest, time)
+    r = requests.get(url + 'latlng=' + str(latlng[0]) + "," + str(latlng[1]) + '&key=' + api_key)
+    results = r.json()
+    result = results['results']
+
+    return result[0]["formatted_address"]

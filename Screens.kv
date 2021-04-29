@@ -13,8 +13,10 @@
         name: 'Start'
     ScreenTwo:
         name: 'Implement'
-    ScreenPlans:
-        name: 'Plans'
+    ScreenHotels:
+        name: 'Hotels'
+    ScreenRestaurants:
+        name: 'Restaurants'
 
 
 
@@ -72,13 +74,30 @@
             size_hint_y: .3
 
 
+<LoginFPop@Popup>:
+    auto_dismiss: False
+    size_hint: (None, None)
+    size: (300,300)
+    BoxLayout:
+        orientation: 'vertical'
+        Label:
+            text: 'Login Failed!'
+        Button:
+            text: 'OK'
+            on_release: root.dismiss()
+
+
 <LoginPop@Popup>:
     auto_dismiss: False
-    Label:
-        text: 'Login Success!'
-    Button:
-        text: 'OK'
-        on_release: root.dismiss()
+    size_hint: (None, None)
+    size: (300,300)
+    BoxLayout:
+        orientation: 'vertical'
+        Label:
+            text: 'Login Success!'
+        Button:
+            text: 'OK'
+            on_release: root.dismiss()
 
 
 <ScreenRegister>:
@@ -117,8 +136,8 @@
             orientation: 'horizontal'
             size_hint_y: .1
             Button:
-                text: 'Check for Username Availability'
-                on_release: root.check_availability()
+                text: 'Back To Login'
+                on_release: root.go_forward()
             Button:
                 text: 'Register'
                 on_release: root.Register()
@@ -129,28 +148,32 @@
 
 <RegFailPop@Popup>:
     auto_dismiss: False
-    Label:
-        text: 'Register Failed!'
-    Button:
-        text: 'OK'
-        on_release: root.dismiss()
-
+    size_hint: (None, None)
+    size: (300,300)
+    BoxLayout:
+        orientation: 'vertical'
+        Label:
+            text: 'Register Failed!'
+        Button:
+            text: 'OK'
+            on_release: root.dismiss()
 <RegSuccessPop@Popup>:
     auto_dismiss: False
-    Label:
-        text: 'Register Succeeded!'
-    Button:
-        text: 'OK'
-        on_release: root.dismiss()
+    size_hint: (None, None)
+    size: (300,300)
+    BoxLayout:
+        orientation: 'vertical'
+        Label:
+            text: 'Register Succeeded!'
+        Button:
+            text: 'OK'
+            on_release: root.dismiss()
+
 
 
 <ScreenOne>:
     BoxLayout:
         orientation: 'vertical'
-        Label:
-            text: app.greetings_username()
-            size_hint_y: .1
-            halign: 'right'
         Label:
             text: 'Welcome to Use Travel Companion'
             font_size: 36
@@ -195,7 +218,7 @@
                 text: 'Calculate'
                 on_release: root.calc()
             Button:
-                text: 'Show Directions on GoogleMap'
+                text: 'Prepare Directions on GoogleMap'
                 on_release: root.GoogleMap()
         Button:
             size_hint_y: .1
@@ -206,57 +229,108 @@
 <ScreenTwo>:
     BoxLayout:
         orientation: 'vertical'
-        Label:
-            text: app.greetings_username()
-            size_hint_y: .1
-            halign: 'right'
-        Label:
-            text: 'Please Implement Your Trip Details'
-            font_size: 26
-        Label:
-            text: 'According to latest US Hour-of-Service Regulations'
-        Label:
-            text: '(Reference: "Commercial Motor Vehicle Driver Fatigue, '
-        Label:
-            text: 'Long-Term Health, and Highway Safety: Research Needs" (2016) ), '
-        Label:
-            text: 'we recommend you - as a driver for self-driving - to sleep for'
-        Label:
-            text: '8 hours at night, and rest another 2 hours on day, for your safe drive.'
         BoxLayout:
             orientation: 'horizontal'
+            size_hint_y: .6
+            Image:
+                source: 'GoogleMapsImage.png'
+                size_hint_x: .5
+            Label:
+                text: 'Please Implement Your Trip Details'
+                font_size: 30
+                size_hint_x: .5
+        Label:
+            text: 'According to latest US Hour-of-Service Regulations (Reference: "Commercial Motor Vehicle Driver Fatigue, Long-Term Health, and Highway Safety: Research Needs" (2016) ), we recommend you - as a driver for self-driving - to sleep for 8 hours at night, for your safe drive.'
+            text_size: self.width, None
+            size_hint_y: .25
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: .15
             Label:
                 text: 'What time do you plan to start your trip? (HH:MM in 24-hour-format)'
+                text_size: self.width, None
+                size_hint_x: .7
             TextInput:
-                id: start_time
+                id: start_hour
+                size_hint_x: .15
+            Label:
+                text: ':'
+                size_hint_x: .1
+            TextInput:
+                id: start_min
+                size_hint_x: .15
         BoxLayout:
             orientation: 'horizontal'
+            size_hint_y: .15
             Label:
                 text: 'What time do you plan to start having lunch and resting at noon? (HH:MM in 24-hour-format)'
+                text_size: self.width, None
+                size_hint_x: .7
             TextInput:
-                id: lunch-time
+                id: lunch_hour
+                size_hint_x: .15
+            Label:
+                text: ':'
+                size_hint_x: .1
+            TextInput:
+                id: lunch_min
+                size_hint_x: .15
         BoxLayout:
             orientation: 'horizontal'
+            size_hint_y: .15
             Label:
                 text: 'What time do you plan to start resting from night to morning? (HH:MM in 24-hour-format)'
+                text_size: self.width, None
+                size_hint_x: .7
             TextInput:
-                id: sleep-time
+                id: sleep_hour
+                size_hint_x: .15
+            Label:
+                text: ':'
+                size_hint_x: .1
+            TextInput:
+                id: sleep_min
+                size_hint_x: .15
         Button:
             text: 'Recommended Hotels =>'
             on_release: root.recommended_hotels()
+            size_hint_y: .15
         Button:
             text: 'Check for Nearby Restaurants =>'
             on_release: root.nearby_restaurants()
+            size_hint_y: .15
 
 <ScreenHotels>:
     BoxLayout:
         orientation: 'vertical'
-        Label:
-            text: app.greetings_username()
-            size_hint_y: .1
-            halign: 'right'
 
 
 <ScreenRestaurants>:
     BoxLayout:
         orientation: 'vertical'
+        Label:
+            text: 'Nearby Restaurants'
+            size_hint_y: .25
+        Label:
+            text: 'Your Current Location:'
+            size_hint_y: .15
+        Label:
+            text: root.current_location()
+            size_hint_y: .15
+            text_size: self.width, None
+        Label:
+            text: root.restaurants()
+            text_size: self.width, None
+            size_hint_y: .45
+
+<ErrorPop@Popup>:
+    auto_dismiss: False
+    size_hint: (None, None)
+    size: (300,300)
+    BoxLayout:
+        orientation: 'vertical'
+        Label:
+            text: 'An Error Occurs!'
+        Button:
+            text: 'OK'
+            on_release: root.dismiss()

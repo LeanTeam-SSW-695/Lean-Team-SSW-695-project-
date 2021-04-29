@@ -126,4 +126,4 @@ btn_show_map.place(x=500, y=370)
 btn_findInfo = tkinter.Button(screen, text='Find Hotels and Restaurants', command=get_info)
 btn_findInfo.place(x=400, y=420)
 
-screen.mainloop()
+# screen.mainloop()
