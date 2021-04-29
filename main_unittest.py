@@ -23,6 +23,6 @@ class TestAPP(unittest.TestCase):
     #     self.assertEqual(main.distance(x_coordinates, y_coordinates), ('211 mi', '3 hours 31 mins'))
 
     def test_simple(self):
-        self.assertEqual(1==1)
+        self.assertEqual(1, 1)
 if __name__ == '__main__':
     unittest.main(argv=['first-arg-is-ignored'], exit=False)
