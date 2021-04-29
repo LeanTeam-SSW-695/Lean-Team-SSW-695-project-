@@ -1,32 +1,55 @@
 import kivy
+import sqlite3
 from kivy.app import App
-from kivy.uix.label import Label
-from kivy.uix.widget import Widget
-from kivy.uix.button import Button
-from kivy.uix.textinput import TextInput
-from kivy.uix.image import Image
-from kivy.uix.floatlayout import FloatLayout
-from kivy.uix.screenmanager import ScreenManager, Screen#, SlideTransition
+from kivy.uix.screenmanager import ScreenManager, Screen, SlideTransition
 from kivy.lang import Builder
 from kivy.clock import Clock
 
 
 class ScreenLoading(Screen):
     def on_enter(self, *args):
-        Clock.schedule_once(self.go_to_main, 3)
+        Clock.schedule_once(self.go_to_login, 2.5)
 
-    def go_to_main(self, dt):
-        # self.manager.transition = SlideTransition(direction='left')
+    def go_to_login(self, dt):
+        self.manager.transition = SlideTransition(direction='left')
+        self.manager.current = 'Login'
+
+
+class ScreenLogin(Screen):
+    def go_forward(self):
+        self.manager.transition = SlideTransition(direction='left')
         self.manager.current = 'Start'
+
+    def register(self):
+        self.manager.transition = SlideTransition(direction='right')
+        self.manager.current = 'Register'
+
+    def login(self):
+        # Database required
+        self.go_forward()
+
+
+class ScreenRegister(Screen):
+    # Requires database
+    pass
 
 
 class ScreenOne(Screen):
     def go_forward(self):
+        self.manager.transition = SlideTransition(direction='left')
         self.manager.current = 'Implement'
+
+    def getUsername(self) -> str:
+        return 'aa'
 
 
 class ScreenTwo(Screen):
-    pass
+    def recommend(self):
+        self.go_forward()
+
+    def go_forward(self):
+        self.manager.transition = SlideTransition(direction='left')
+        self.manager.current = 'Plans'
 
 
 class ScreenPlans(Screen):

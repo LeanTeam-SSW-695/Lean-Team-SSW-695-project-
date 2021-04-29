@@ -21,7 +21,7 @@ def get_location():
     """ a function that uses Selenium and MyCurrentLocation.net to retrieve the user's location """
     options = Options()
     options.add_argument("--use--fake-ui-for-media-stream")
-    driver = webdriver.Chrome(executable_path='chromedriver.exe',
+    driver = webdriver.Chrome(executable_path='/Users/abod/Desktop/SSW 695/LeanTeam-SSW-695/chromedriver',
                               options=options)
     timeout = 10
     driver.get("https://mycurrentlocation.net/")

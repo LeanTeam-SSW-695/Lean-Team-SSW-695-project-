@@ -5,6 +5,10 @@
 <ScreenManagement>:
     ScreenLoading:
         name: 'Loading'
+    ScreenLogin:
+        name: 'Login'
+    ScreenRegister:
+        name: 'Register'
     ScreenOne:
         name: 'Start'
     ScreenTwo:
@@ -13,29 +17,178 @@
         name: 'Plans'
 
 
+
 <ScreenLoading>:
     Image:
         source: 'Loading Picture.png'
 
 
-<ScreenOne>:
-    orientation: 'vertical'
-    Label:
-        text: 'Welcome to Use Travel Companion!'
+<ScreenLogin>:
     BoxLayout:
+        orientation: 'vertical'
+        Label:
+            text: 'Login Or Register'
+            bold: True
+            font_size: 36
+            size_hint_y: .3
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: .1
+            Label:
+                text: 'Username: '
+                size_hint_x: .3
+            TextInput:
+                id: username
+                multiline: False
+        Label:
+            text: ''
+            size_hint_y: .1
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: .1
+            Label:
+                text: 'Password: '
+                size_hint_x: .3
+            TextInput:
+                id: password
+                multiline: False
+                password: True
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: .1
+            Button:
+                text: 'No Account Yet? Register'
+                size_hint_x: .3
+                on_release: root.register()
+            Label:
+                text: ' '
+                size_hint_x: .5
+            Button:
+                text: 'Login'
+                size_hint_x: .2
+                on_release: root.login()
+        Label:
+            text: ''
+            size_hint_y: .3
 
+<ScreenRegister>:
+    BoxLayout:
+        orientation: 'vertical'
+        Label:
+            text: 'Register'
+            font_size: 36
+            size_hint_y: .2
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: .1
+            Label:
+                text: 'Email Address: '
+                size_hint_x: .3
+            TextInput:
+                id: email
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: .1
+            Label:
+                text: 'Username: '
+                size_hint_x: .3
+            TextInput:
+                id: username
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: .1
+            Label:
+                text: 'Password: '
+                size_hint_x: .3
+            TextInput:
+                id: password
+                password: True
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: .1
+            Button:
+                text: 'Check for Availability'
+                on_release: root.check_availability()
+            Button:
+                text: 'Register'
+                on_release: root.Register()
+        Label:
+            text: ''
+            size_hint_y: .4
+
+
+
+
+
+<ScreenOne>:
+    BoxLayout:
+        orientation: 'vertical'
+        Label:
+            text: root.getUsername()
+            size_hint_y: .1
+            halign: 'right'
+        Label:
+            text: 'Welcome to Use Travel Companion'
+            font_size: 36
+            size_hint_y: .2
         Image:
             source: 'Image.jpg'
+            size_hint_y: .4
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: .1
+            Label:
+                text: 'Origin Address: '
+                size_hint_x: .3
+            TextInput:
+                id: Origin
+                auto_indent: True
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: .1
+            Label:
+                text: 'Destination Address: '
+                size_hint_x: .3
+            TextInput:
+                id: Destination
+                auto_indent: True
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: .1
+            Button:
+                text: 'Use Current Address as Origin Address'
+                on_release: root.current_as_origin()
+            Button:
+                text: 'Use Current Address as Destination Address'
+                on_release: root.current_as_destination()
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: .1
+            Button:
+                text: 'Reset'
+                on_release: root.reset()
+            Button:
+                text: 'Calculate'
+                on_release: root.calc()
+            Button:
+                text: 'Show Directions on GoogleMap'
+                on_release: root.GoogleMap()
         Button:
-            text: 'Next'
+            size_hint_y: .1
+            text: 'Implement Trip Details =>'
             on_release: root.go_forward()
 
 
 
 <ScreenTwo>:
     BoxLayout:
+        Button:
+            text: 'Recommended Plans'
+            on_release: root.recommend()
 
 
 <ScreenPlans>:
     BoxLayout:
+
+
 
