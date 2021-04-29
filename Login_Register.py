@@ -1,16 +1,17 @@
 import mysql.connector
 from mysql.connector.constants import ClientFlag
 
-def create_table:
+def set_connection:
     config = {
         'user': 'root',
         'host': '35.220.246.119',
         'password': "12345678",
         'client_flags': [ClientFlag.SSL]
     }
-
     cnxn = mysql.connector.connect(**config)
     cursor = cnxn.cursor()  # initialize connection cursor
+def create_table:
+    set_connection()
     try:
         cursor.execute('CREATE DATABASE login')  # create a new 'testdb' database
         cnxn.close()
@@ -26,9 +27,7 @@ def create_table:
         print("Database exists")
 
 def register(username, pwd):
-    config['database'] = 'login'  # add new database to config dict
-    cnxn = mysql.connector.connect(**config)
-    cursor = cnxn.cursor()
+    set_connection()
     if login(username, pwd):
         print("User has registered!")
         return False
@@ -43,9 +42,7 @@ def register(username, pwd):
         return True
 
 def login(username, pwd):
-    config['database'] = 'login'  # add new database to config dict
-    cnxn = mysql.connector.connect(**config)
-    cursor = cnxn.cursor()
+    set_connection()
     query = "SELECT COUNT(*) FROM login WHERE Username = '" + username + "' AND Pwd = '" + pwd + "'"
     cursor.execute(query)
     out = cursor.fetchall()
