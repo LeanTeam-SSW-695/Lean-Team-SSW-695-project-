@@ -8,10 +8,11 @@ def set_connection():
         'password': "12345678",
         'client_flags': [ClientFlag.SSL]
     }
+    return config
+def create_table():
+    config = set_connection()
     cnxn = mysql.connector.connect(**config)
     cursor = cnxn.cursor()  # initialize connection cursor
-def create_table():
-    set_connection()
     try:
         cursor.execute('CREATE DATABASE login')  # create a new 'testdb' database
         cnxn.close()
@@ -27,7 +28,10 @@ def create_table():
         print("Database exists")
 
 def register(username, pwd):
-    set_connection()
+    config = set_connection()
+    config['database'] = 'login'  # add new database to config dict
+    cnxn = mysql.connector.connect(**config)
+    cursor = cnxn.cursor()  # initialize connection cursor
     if login(username, pwd):
         print("User has registered!")
         return False
@@ -42,7 +46,10 @@ def register(username, pwd):
         return True
 
 def login(username, pwd):
-    set_connection()
+    config = set_connection()
+    config['database'] = 'login'  # add new database to config dict
+    cnxn = mysql.connector.connect(**config)
+    cursor = cnxn.cursor()  # initialize connection cursor
     query = "SELECT COUNT(*) FROM login WHERE Username = '" + username + "' AND Pwd = '" + pwd + "'"
     cursor.execute(query)
     out = cursor.fetchall()
