@@ -224,21 +224,17 @@
     BoxLayout:
         orientation: 'vertical'
         BoxLayout:
-            orientation: 'horizontal'
-            Image:
-                source: 'GoogleMapsImage.png'
-            BoxLayout:
-                orientation: 'vertical'
-                size_hint_x: .5
-                Label:
-                    text: 'Please Implement Your Trip Details'
-                    font_size: 27
-                    size_hint_y: .3
-                    text_size: self.width, None
-                Label:
-                    text: 'According to latest US Hour-of-Service Regulations (Reference: "Commercial Motor Vehicle Driver Fatigue, Long-Term Health, and Highway Safety: Research Needs" (2016) ), we recommend you - as a driver for self-driving - to sleep for 8 hours at night, for your safe drive.'
-                    text_size: self.width, None
-                    size_hint_y: .7
+            orientation: 'vertical'
+            Label:
+                text: 'Please Implement Your Trip Details'
+                font_size: 30
+                halign: 'center'
+                size_hint_y: .3
+                text_size: self.width, None
+            Label:
+                text: 'According to latest US Hour-of-Service Regulations (Reference: "Commercial Motor Vehicle Driver Fatigue, Long-Term Health, and Highway Safety: Research Needs" (2016) ), we recommend you - as a driver for self-driving - to sleep for 8 hours at night, for your safe drive.'
+                text_size: self.width, None
+                size_hint_y: .7
         BoxLayout:
             orientation: 'horizontal'
             size_hint_y: .15

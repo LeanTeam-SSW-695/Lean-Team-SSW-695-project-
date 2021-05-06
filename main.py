@@ -145,7 +145,7 @@ class ScreenOne(Screen):
                      " address is {}°F,\n and at origin is {}°F".format(theDistance, theDuration, originWeather,
                                                                         destinationWeather)
 
-        except (ValueError, IndexError, urllib.error.URLError, urllib.error.HTTPError):
+        except:
             Factory.ErrorPop().open()
             return None
         originCoor = GoogleMapAPI.read_address(originAddress)
@@ -182,7 +182,7 @@ class ScreenImplement(Screen):
             lunch_time = int(self.ids.lunch_hour.text) * 60 + int(self.ids.lunch_min.text)
             sleep_time = int(self.ids.sleep_hour.text) * 60 + int(self.ids.sleep_min.text)
         except:
-            Factory.ErrorPop.open()
+            Factory.ErrorPop().open()
             return None
         daily_time = 14*60
         if start_time < lunch_time:
@@ -190,26 +190,38 @@ class ScreenImplement(Screen):
         else:
             first_day_time = sleep_time - start_time
         total_time = first_day_time
-        hotels = []
-        while total_time < theDuration:
-            address = hotel_restaurant_API.find_place(originAddress,destinationAddress, total_time)
-            for dist in range(5,30):
-                
+        day: int = 1
+        Hotels = []
+        duration = int(theDuration.split()[0])*60 + int(theDuration.split()[2]) if len(theDuration.split())==4\
+                                                                                else int(theDuration.split()[0])
+        while total_time < duration:
+            address = hotel_restaurant_API.find_place(originAddress, destinationAddress, total_time)
+            answer = "Day %d\n" % day
+            current_list = hotel_restaurant_API.find_restaurant(address, 100, 1)
+            for one in current_list:
+                answer = answer + one['Name'] + '\n' + 'Rating: ' + one['Rating'] + ',\n' + \
+                         one['Address'] + '\nOpen?: ' + one['Open'] + '\n'
+            if answer == "Day %d\n" % day:
+                answer = answer + 'We cannot find the hotel for you to rest at night on Day %d\n' % day
+            Hotels.append(answer)
             total_time += daily_time
+            day += 1
 
         # Construct the Screen Hotels
         ScreenHotels = Screen(name='Hotels')
         layout = BoxLayout(orientation='vertical')
         ScreenHotels.add_widget(layout)
         layout.add_widget(Label(text='Recommended Hotels', font_size=30))
-        for hotel in hotels:
-            layout.add_widget(Label(text=))
+        if len(Hotels)==0:
+            layout.add_widget(Label(text='Your trip would end in one day, so no hotels would be planned for you'))
+        else:
+            for hotel in Hotels:
+                layout.add_widget(Label(text=hotel, text_size=self.size))
+        layout.add_widget(Button(text='Back', on_release=self.return_here))
         self.manager.add_widget(ScreenHotels)
-
         # Switch to Screen Hotels
         self.manager.transition = SlideTransition(direction='left')
-
-
+        self.manager.current = 'Hotels'
 
     def nearby_restaurants(self):
         # Construct the Screen Restaurants
@@ -218,11 +230,13 @@ class ScreenImplement(Screen):
         ScreenRestaurants.add_widget(layout)
         layout.add_widget(Label(text='Nearby Restaurants', font_size=30))
         try:
-            layout.add_widget(Label(text='Your Current Location: '+self.current_location()))
-            layout.add_widget(Label(text=self.restaurants(), text_size=self.size))
+            current_loc = self.current_location()
+            layout.add_widget(Label(text='Your Current Location: '+current_loc))
+            layout.add_widget(Label(text=self.restaurants(current_loc), text_size=self.size))
         except:
-            Factory.ErrorPop.open()
+            Factory.ErrorPop().open()
             return None
+        layout.add_widget(Button(text='Back', on_release=self.return_here))
         self.manager.add_widget(ScreenRestaurants)
 
         # Switch to Screen Restaurants
@@ -233,16 +247,12 @@ class ScreenImplement(Screen):
         coordinates = GoogleMapAPI.get_location()
         return coordinates['neighborhood']
 
-    def restaurants(self) -> str:
-        current_loc = self.current_location()
+    def restaurants(self, current_loc) -> str:
         answer = ""
-        for dist in range(5, 30):
-            current_list = hotel_restaurant_API.find_restaurant(current_loc, 'food', 3.0, dist, 5)
-            for one in current_list:
-                answer = answer + one['Name'] + '\n' + one['Distance'] + ' miles, Rating: ' + one['Rating'] + ',\n' +\
-                         one['Address'] + '\n' + one['Phone'] + '\n\n'
-            if len(answer) > 0:
-                break
+        current_list = hotel_restaurant_API.find_restaurant(current_loc, 'food', 3.0, 100, 5)
+        for one in current_list:
+            answer = answer + one['Name'] + '\n' + one['Distance'] + ' miles, Rating: ' + one['Rating'] + ',\n' +\
+                     one['Address'] + '\n' + one['Phone'] + '\n\n'
         return answer
 
 
