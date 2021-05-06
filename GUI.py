@@ -61,7 +61,7 @@ def calc():
         output = "Distance between origin and destination is about {}\n and the duration of the drive is {}." \
                  "\n\nThe temperature at destination" \
                  " address is {}°F,\n and at origin is {}°F".format(theDistance, theDuration, originWeather,
-                                                                  destinationWeather)
+                                                                    destinationWeather)
         tkinter.Label(screen, text=output).place(x=40, y=440)
     except (ValueError, IndexError, urllib.error.URLError):
         tkinter.messagebox.showerror(title='Error!',

@@ -4,6 +4,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen, SlideTransition
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
 from kivy.uix.label import Label
+from kivy.uix.image import Image
 from kivy.lang import Builder
 from kivy.clock import Clock
 from kivy.factory import Factory
@@ -11,7 +12,6 @@ import mysql.connector
 from mysql.connector.constants import ClientFlag
 import GoogleMapAPI
 import hotel_restaurant_API
-import GUI
 import urllib.error
 
 global username
@@ -112,9 +112,13 @@ class ScreenRegister(Screen):
 
 
 class ScreenOne(Screen):
-    def go_forward(self):
+    def go_Implement(self):
         self.manager.transition = SlideTransition(direction='left')
         self.manager.current = 'Implement'
+
+    def go_One(self, *args):
+        self.manager.transition = SlideTransition(direction='right')
+        self.manager.current = 'Start'
 
     def current_as_origin(self):
         coordinates = GoogleMapAPI.get_location()
@@ -143,59 +147,104 @@ class ScreenOne(Screen):
 
         except (ValueError, IndexError, urllib.error.URLError, urllib.error.HTTPError):
             Factory.ErrorPop().open()
-
-    def GoogleMap(self):
-        originAddress = GoogleMapAPI.read_address(self.ids.Origin.text)
-        destinationAddress = GoogleMapAPI.read_address(self.ids.Destination.text)
+            return None
+        originCoor = GoogleMapAPI.read_address(originAddress)
+        destinCoor = GoogleMapAPI.read_address(destinationAddress)
         try:
-            GoogleMapAPI.get_map(originAddress, destinationAddress)
+            GoogleMapAPI.get_map(originCoor, destinCoor)
         except (ValueError, IndexError, urllib.error.URLError, urllib.error.HTTPError):
             Factory.ErrorPop().open()
+            return None
+
+        # Create Screen Information
+        ScreenInformation = Screen(name='Information')
+        layout = BoxLayout(orientation='vertical')
+        ScreenInformation.add_widget(layout)
+        layout.add_widget(Label(text='Trip Details', font_size=30, size_hint_y=.2))
+        layout.add_widget(Image(source='GoogleMapsImage.png', size_hint_y=.5))
+        layout.add_widget(Label(text=output, text_size=(self.width, None), size_hint_y=.25))
+        layout.add_widget(Button(text='Back', on_release=self.go_One, size_hint_y=.2))
+        self.manager.add_widget(ScreenInformation)
+
+        # Goto Screen Information
+        self.manager.transition = SlideTransition(direction='left')
+        self.manager.current = 'Information'
 
 
-class ScreenTwo(Screen):
+class ScreenImplement(Screen):
+    def return_here(self, *args):
+        self.manager.transition = SlideTransition(direction='right')
+        self.manager.current = 'Implement'
 
     def recommended_hotels(self):
-        start_time = int(self.ids.start_hour.text) * 60 + int(self.ids.start_min.text)
-        lunch_time = int(self.ids.lunch_hour.text) * 60 + int(self.ids.lunch_min.text)
-        sleep_time = int(self.ids.sleep_hour.text) * 60 + int(self.ids.sleep_min.text)
-        daily_time = 14
+        try:
+            start_time = int(self.ids.start_hour.text) * 60 + int(self.ids.start_min.text)
+            lunch_time = int(self.ids.lunch_hour.text) * 60 + int(self.ids.lunch_min.text)
+            sleep_time = int(self.ids.sleep_hour.text) * 60 + int(self.ids.sleep_min.text)
+        except:
+            Factory.ErrorPop.open()
+            return None
+        daily_time = 14*60
         if start_time < lunch_time:
-            first_day_time = lunch_time - start_time + sleep_time - lunch_time - 2
+            first_day_time = lunch_time - start_time + sleep_time - lunch_time - 120
         else:
             first_day_time = sleep_time - start_time
         total_time = first_day_time
+        hotels = []
         while total_time < theDuration:
-            address = hotel_restaurant_API.find_place(originAddress, desti)
+            address = hotel_restaurant_API.find_place(originAddress,destinationAddress, total_time)
+            for dist in range(5,30):
+                
             total_time += daily_time
+
+        # Construct the Screen Hotels
+        ScreenHotels = Screen(name='Hotels')
+        layout = BoxLayout(orientation='vertical')
+        ScreenHotels.add_widget(layout)
+        layout.add_widget(Label(text='Recommended Hotels', font_size=30))
+        for hotel in hotels:
+            layout.add_widget(Label(text=))
+        self.manager.add_widget(ScreenHotels)
+
+        # Switch to Screen Hotels
+        self.manager.transition = SlideTransition(direction='left')
+
 
 
     def nearby_restaurants(self):
+        # Construct the Screen Restaurants
+        ScreenRestaurants = Screen(name='Restaurants')
+        layout = BoxLayout(orientation='vertical')
+        ScreenRestaurants.add_widget(layout)
+        layout.add_widget(Label(text='Nearby Restaurants', font_size=30))
+        try:
+            layout.add_widget(Label(text='Your Current Location: '+self.current_location()))
+            layout.add_widget(Label(text=self.restaurants(), text_size=self.size))
+        except:
+            Factory.ErrorPop.open()
+            return None
+        self.manager.add_widget(ScreenRestaurants)
+
+        # Switch to Screen Restaurants
         self.manager.transition = SlideTransition(direction='left')
         self.manager.current = 'Restaurants'
 
-
-class ScreenHotels(Screen):
-    pass
-
-
-class ScreenRestaurants(Screen):
     def current_location(self) -> str:
         coordinates = GoogleMapAPI.get_location()
-        print(coordinates['neighborhood'])
         return coordinates['neighborhood']
 
     def restaurants(self) -> str:
         current_loc = self.current_location()
         answer = ""
         for dist in range(5, 30):
-            current_list = hotel_restaurant_API.find_restaurant(current_loc, 'food', 4.0, dist, 5)
+            current_list = hotel_restaurant_API.find_restaurant(current_loc, 'food', 3.0, dist, 5)
             for one in current_list:
-                answer = answer + one['Name'] + '\n' + one['Distance'] + ' miles, ' + one['Rating'] + ',\n' +\
-                         one['Address'] + '\n' + one['Phone'] + '\n'
+                answer = answer + one['Name'] + '\n' + one['Distance'] + ' miles, Rating: ' + one['Rating'] + ',\n' +\
+                         one['Address'] + '\n' + one['Phone'] + '\n\n'
             if len(answer) > 0:
                 break
         return answer
+
 
 class ScreenManagement(ScreenManager):
     pass
