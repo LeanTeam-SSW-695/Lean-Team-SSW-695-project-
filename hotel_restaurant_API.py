@@ -95,7 +95,7 @@ def find_hotel(address, miles = 5, number = 5):
                 hdic["Rating"] = 0.0
             hlist.append(hdic)
             count += 1
-        if count > number:
+        if count >= number:
             break
 
     return hlist
