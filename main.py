@@ -113,6 +113,9 @@ class ScreenRegister(Screen):
 
 class ScreenOne(Screen):
     def go_Implement(self):
+        global originAddress, destinationAddress
+        originAddress = self.ids.Origin.text
+        destinationAddress = self.ids.Destination.text
         self.manager.transition = SlideTransition(direction='left')
         self.manager.current = 'Implement'
 
@@ -138,12 +141,13 @@ class ScreenOne(Screen):
         destinationAddress = self.ids.Destination.text
         try:
             global theDistance, theDuration
+
             theDistance, theDuration, originWeather, destinationWeather = GoogleMapAPI.main(originAddress,
                                                                                             destinationAddress)
-            output = "Distance between origin and destination is about {}\n and the duration of the drive is {}." \
-                     "\n\nThe temperature at destination" \
-                     " address is {}°F,\n and at origin is {}°F".format(theDistance, theDuration, originWeather,
-                                                                        destinationWeather)
+            # output = "Distance between origin and destination is about {}\n and the duration of the drive is {}." \
+            #          "\n\nThe temperature at destination" \
+            #          " address is {}°F,\n and at origin is {}°F".format(theDistance, theDuration, originWeather,
+            #                                                             destinationWeather)
 
         except:
             Factory.ErrorPop().open()
@@ -205,6 +209,11 @@ class ScreenImplement(Screen):
         total_time = first_day_time
         day: int = 1
         Hotels = []
+
+        originCoor = GoogleMapAPI.read_address(originAddress)
+        destinCoor = GoogleMapAPI.read_address(destinationAddress)
+        theDistance, theDuration = GoogleMapAPI.distance(originCoor, destinCoor)
+
         if len(theDuration.split()) == 4:
             if theDuration.split()[1] == 'hour' or theDuration.split()[1] == 'hours':
                 duration = int(theDuration.split()[0])*60 + int(theDuration.split()[2])
