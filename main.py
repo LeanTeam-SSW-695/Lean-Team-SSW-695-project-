@@ -263,7 +263,7 @@ class ScreenImplement(Screen):
         layout.add_widget(Label(text='Nearby Restaurants', font_size=30))
         try:
             current_loc = self.current_location()
-            layout.add_widget(Label(text='Your Current Location: '+current_loc))
+            layout.add_widget(Label(text='Your Current Location: '+ current_loc))
             layout.add_widget(Label(text=self.restaurants(current_loc), text_size=self.size))
         except:
             Factory.ErrorPop().open()
@@ -271,7 +271,6 @@ class ScreenImplement(Screen):
         layout.add_widget(Button(text='Back', on_release=self.return_here))
         self.manager.add_widget(ScreenRestaurants)
 
-        # Switch to Screen Restaurants
         self.manager.transition = SlideTransition(direction='left')
         self.manager.current = 'Restaurants'
 
@@ -283,7 +282,7 @@ class ScreenImplement(Screen):
         answer = ""
         current_list = hotel_restaurant_API.find_restaurant(current_loc, 'food', 3.0, 60, 5)
         for one in current_list:
-            answer = answer + one['Name'] + '\n' + one['Distance'] + ' miles, Rating: ' + one['Rating'] + ',\n' +\
+            answer = answer + one['Name'] + '\n' + one['Distance'] + ' miles, Rating: ' + str(one['Rating']) + ',\n' +\
                      one['Address'] + '\n' + one['Phone'] + '\n\n'
         return answer
 
