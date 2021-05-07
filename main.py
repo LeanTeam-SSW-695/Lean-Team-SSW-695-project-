@@ -145,10 +145,10 @@ class ScreenOne(Screen):
 
             theDistance, theDuration, originWeather, destinationWeather = GoogleMapAPI.main(originAddress,
                                                                                             destinationAddress)
-            # output = "Distance between origin and destination is about {}\n and the duration of the drive is {}." \
-            #          "\n\nThe temperature at destination" \
-            #          " address is {}°F,\n and at origin is {}°F".format(theDistance, theDuration, originWeather,
-            #                                                             destinationWeather)
+            output = "Distance between origin and destination is about {}\n and the duration of the drive is {}." \
+                     "\n\nThe temperature at destination" \
+                     " address is {}°F,\n and at origin is {}°F".format(theDistance, theDuration, originWeather,
+                                                                        destinationWeather)
 
         except:
             Factory.ErrorPop().open()
