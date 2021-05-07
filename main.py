@@ -16,6 +16,7 @@ import urllib.error
 
 global username
 
+
 def set_connection():
     config = {
         'user': 'root',
@@ -181,16 +182,16 @@ class ScreenImplement(Screen):
         self.manager.current = 'Implement'
 
     def time_convert(self, mins):
-        if mins>=24*60:
-            day = mins//(24*60)
-            hour = mins % (24*60)
-            if day>1:
+        if mins >= 24 * 60:
+            day = mins // (24 * 60)
+            hour = mins % (24 * 60)
+            if day > 1:
                 return "%d days %d hours" % (day, hour)
             else:
                 return '1 day %d hours' % hour
         else:
-            hour = mins//60
-            min = mins%60
+            hour = mins // 60
+            min = mins % 60
             return "%d hours %d minutes" % (hour, min)
 
     def recommended_hotels(self):
@@ -201,7 +202,7 @@ class ScreenImplement(Screen):
         except:
             Factory.ErrorPop().open()
             return None
-        daily_time = 14*60
+        daily_time = 14 * 60
         if start_time < lunch_time:
             first_day_time = lunch_time - start_time + sleep_time - lunch_time - 120
         else:
@@ -216,9 +217,9 @@ class ScreenImplement(Screen):
 
         if len(theDuration.split()) == 4:
             if theDuration.split()[1] == 'hour' or theDuration.split()[1] == 'hours':
-                duration = int(theDuration.split()[0])*60 + int(theDuration.split()[2])
+                duration = int(theDuration.split()[0]) * 60 + int(theDuration.split()[2])
             else:
-                duration = int(theDuration.split()[0])*24*60 + int(theDuration.split()[2])*60
+                duration = int(theDuration.split()[0]) * 24 * 60 + int(theDuration.split()[2]) * 60
         else:
             duration = int(theDuration.split()[0])
         while total_time < duration:
@@ -244,8 +245,9 @@ class ScreenImplement(Screen):
         layout = BoxLayout(orientation='vertical')
         ScreenHotels.add_widget(layout)
         layout.add_widget(Label(text='Recommended Hotels', font_size=30, size_hint_y=.2))
-        if len(Hotels)==0:
-            layout.add_widget(Label(text='Your trip would end in one day, so no hotels would be planned for you', size_hint_y=.2))
+        if len(Hotels) == 0:
+            layout.add_widget(
+                Label(text='Your trip would end in one day, so no hotels would be planned for you', size_hint_y=.2))
         else:
             for hotel in Hotels:
                 layout.add_widget(Label(text=hotel, size_hint_y=.2))
@@ -263,12 +265,13 @@ class ScreenImplement(Screen):
         layout.add_widget(Label(text='Nearby Restaurants', font_size=30))
         try:
             current_loc = self.current_location()
-            layout.add_widget(Label(text='Your Current Location: '+ current_loc))
+            #current_loc = originAddress
+            layout.add_widget(Label(text='Your Current Location: ' + current_loc))
             layout.add_widget(Label(text=self.restaurants(current_loc), text_size=self.size))
         except:
             Factory.ErrorPop().open()
             return None
-        layout.add_widget(Button(text='Back', on_release=self.return_here))
+        layout.add_widget(Button(text='Back', on_release=self.return_here, size_hint_y=.15))
         self.manager.add_widget(ScreenRestaurants)
 
         self.manager.transition = SlideTransition(direction='left')
@@ -282,7 +285,7 @@ class ScreenImplement(Screen):
         answer = ""
         current_list = hotel_restaurant_API.find_restaurant(current_loc, 'food', 3.0, 60, 5)
         for one in current_list:
-            answer = answer + one['Name'] + '\n' + one['Distance'] + ' miles, Rating: ' + str(one['Rating']) + ',\n' +\
+            answer = answer + one['Name'] + '\n' + one['Distance'] + ' miles, Rating: ' + str(one['Rating']) + ',\n' + \
                      one['Address'] + '\n' + one['Phone'] + '\n\n'
         return answer
 
