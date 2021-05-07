@@ -102,15 +102,23 @@ def print_hotel(address, miles = 5, number = 5):
 
 
 def time(duration):
-    t = int(duration.split(" ")[0]) * 60 + int(duration.split(" ")[2])
+
+    if duration.split(" ")[1] == "hour" or duration.split(" ")[1] == "hours":
+        t = int(duration.split(" ")[0]) * 60 + int(duration.split(" ")[2])
+    elif duration.split(" ")[1] == "day" or duration.split(" ")[1] == "days":
+        t = int(duration.split(" ")[0]) * 1440 + int(duration.split(" ")[2])*60
+    else:
+        t = int(duration.split()[0])
     return t
 
 
 def estimate(origin, dest, Time):
-    t = time(Time)
+    t = Time
     origin_place = GoogleMapAPI.read_address(origin)
     dest_place = GoogleMapAPI.read_address(dest)
     total_time = GoogleMapAPI.distance(origin_place, dest_place)[1]
+    print(t)
+    print(total_time)
     t_difference = t / time(total_time)
     final_place = []
     final_place.append(origin_place["lat"] + (dest_place["lat"] - origin_place["lat"]) * t_difference)
@@ -126,5 +134,10 @@ def find_place(origin, dest, time):
     r = requests.get(url + 'latlng=' + str(latlng[0]) + "," + str(latlng[1]) + '&key=' + api_key)
     results = r.json()
     result = results['results']
-
-    return result[0]["formatted_address"]
+    try:
+        ret = result[0]["formatted_address"]
+    except KeyError:
+        ret = result["formatted_address"]
+    except IndexError:
+        return None
+    return ret

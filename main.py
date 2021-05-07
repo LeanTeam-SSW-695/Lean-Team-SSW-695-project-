@@ -176,6 +176,19 @@ class ScreenImplement(Screen):
         self.manager.transition = SlideTransition(direction='right')
         self.manager.current = 'Implement'
 
+    def time_convert(self, mins):
+        if mins>=24*60:
+            day = mins//(24*60)
+            hour = mins % (24*60)
+            if day>1:
+                return "%d days %d hours" % (day, hour)
+            else:
+                return '1 day %d hours' % hour
+        else:
+            hour = mins//60
+            min = mins%60
+            return "%d hours %d minutes" % (hour, min)
+
     def recommended_hotels(self):
         try:
             start_time = int(self.ids.start_hour.text) * 60 + int(self.ids.start_min.text)
@@ -192,15 +205,25 @@ class ScreenImplement(Screen):
         total_time = first_day_time
         day: int = 1
         Hotels = []
-        duration = int(theDuration.split()[0])*60 + int(theDuration.split()[2]) if len(theDuration.split())==4\
-                                                                                else int(theDuration.split()[0])
+        if len(theDuration.split()) == 4:
+            if theDuration.split()[1] == 'hour' or theDuration.split()[1] == 'hours':
+                duration = int(theDuration.split()[0])*60 + int(theDuration.split()[2])
+            else:
+                duration = int(theDuration.split()[0])*24*60 + int(theDuration.split()[2])*60
+        else:
+            duration = int(theDuration.split()[0])
         while total_time < duration:
             address = hotel_restaurant_API.find_place(originAddress, destinationAddress, total_time)
+            print(address)
+            if address is None:
+                total_time += daily_time
+                day += 1
+                continue
             answer = "Day %d\n" % day
-            current_list = hotel_restaurant_API.find_restaurant(address, 100, 1)
+            current_list = hotel_restaurant_API.find_hotel(address, 60, 1)
             for one in current_list:
-                answer = answer + one['Name'] + '\n' + 'Rating: ' + one['Rating'] + ',\n' + \
-                         one['Address'] + '\nOpen?: ' + one['Open'] + '\n'
+                answer = answer + one['Name'] + ', Rating: ' + str(one['Rating']) + ',\n' + \
+                         one['Address'] + '\nOpen Now: ' + str(one['Open']) + '\n'
             if answer == "Day %d\n" % day:
                 answer = answer + 'We cannot find the hotel for you to rest at night on Day %d\n' % day
             Hotels.append(answer)
@@ -211,13 +234,13 @@ class ScreenImplement(Screen):
         ScreenHotels = Screen(name='Hotels')
         layout = BoxLayout(orientation='vertical')
         ScreenHotels.add_widget(layout)
-        layout.add_widget(Label(text='Recommended Hotels', font_size=30))
+        layout.add_widget(Label(text='Recommended Hotels', font_size=30, size_hint_y=.2))
         if len(Hotels)==0:
-            layout.add_widget(Label(text='Your trip would end in one day, so no hotels would be planned for you'))
+            layout.add_widget(Label(text='Your trip would end in one day, so no hotels would be planned for you', size_hint_y=.2))
         else:
             for hotel in Hotels:
-                layout.add_widget(Label(text=hotel, text_size=self.size))
-        layout.add_widget(Button(text='Back', on_release=self.return_here))
+                layout.add_widget(Label(text=hotel, size_hint_y=.2))
+        layout.add_widget(Button(text='Back', on_release=self.return_here, size_hint_y=.15))
         self.manager.add_widget(ScreenHotels)
         # Switch to Screen Hotels
         self.manager.transition = SlideTransition(direction='left')
@@ -249,7 +272,7 @@ class ScreenImplement(Screen):
 
     def restaurants(self, current_loc) -> str:
         answer = ""
-        current_list = hotel_restaurant_API.find_restaurant(current_loc, 'food', 3.0, 100, 5)
+        current_list = hotel_restaurant_API.find_restaurant(current_loc, 'food', 3.0, 60, 5)
         for one in current_list:
             answer = answer + one['Name'] + '\n' + one['Distance'] + ' miles, Rating: ' + one['Rating'] + ',\n' +\
                      one['Address'] + '\n' + one['Phone'] + '\n\n'
