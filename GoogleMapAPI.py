@@ -1,10 +1,6 @@
 """
     authors: 
     Abdulellah Shahrani, Chengyi Zhang, Haoran Li, and Sachin Paramesha
-    the code:
-    a program that uses the US Census geocoding API to retrieve the
-    location (latitude and longitude) of two addresses,
-    and compute the approximate distance, in miles, between the two locations.
 """
 
 import urllib.request, urllib.error, urllib.parse
