@@ -5,7 +5,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
 
-def find_restaurant(address, term = "food", rating = 4.0, miles = 5, number = 5):
+def find_restaurant(address, term = "food", rating = 4.0, miles = 5, number = 1):
     """
     The function search term around location and show reviews
     address: The address
@@ -89,7 +89,10 @@ def find_hotel(address, miles = 5, number = 5):
                 hdic["Open"] = hotel["opening_hours"]["open_now"]
             except KeyError:
                 hdic["Open"] = "Unknown"
-            hdic["Rating"] = hotel["rating"]
+            try:
+                hdic["Rating"] = hotel["rating"]
+            except KeyError:
+                hdic["Rating"] = 0.0
             hlist.append(hdic)
             count += 1
         if count > number:

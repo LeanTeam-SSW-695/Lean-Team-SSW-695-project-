@@ -204,9 +204,9 @@ class ScreenImplement(Screen):
             return None
         daily_time = 14 * 60
         if start_time < lunch_time:
-            first_day_time = lunch_time - start_time + sleep_time - lunch_time - 120
+            first_day_time = abs(sleep_time - start_time) - 120
         else:
-            first_day_time = sleep_time - start_time
+            first_day_time = abs(sleep_time - start_time)
         total_time = first_day_time
         day: int = 1
         Hotels = []
@@ -222,8 +222,9 @@ class ScreenImplement(Screen):
                 duration = int(theDuration.split()[0]) * 24 * 60 + int(theDuration.split()[2]) * 60
         else:
             duration = int(theDuration.split()[0])
+        address = originAddress
         while total_time < duration:
-            address = hotel_restaurant_API.find_place(originAddress, destinationAddress, total_time)
+            address = hotel_restaurant_API.find_place(address, destinationAddress, daily_time)
             print(address)
             if address is None:
                 total_time += daily_time
@@ -239,6 +240,7 @@ class ScreenImplement(Screen):
             Hotels.append(answer)
             total_time += daily_time
             day += 1
+
 
         # Construct the Screen Hotels
         ScreenHotels = Screen(name='Hotels')
